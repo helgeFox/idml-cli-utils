@@ -5,6 +5,7 @@ const fs = require('graceful-fs');
 const path = require('path');
 const cpy = require('cpy');
 const shortid = require('shortid');
+const rimraf = require('rimraf');
 
 class TemplateRelocator {
 	constructor(prodPath, stagePath) {
@@ -54,7 +55,11 @@ class TemplateRelocator {
 	}
 
 	copyToStage() {
-		return this._copy(this.tempDir, this.stageTemplatePath);
+		return this._copy(this.tempDir, this.stageTemplatePath).then(() => {
+			rimraf(this.tempDir, (err, result) => {
+				// Done cleaning
+			});
+		});
 	}
 
 	_copy(from, to) {
