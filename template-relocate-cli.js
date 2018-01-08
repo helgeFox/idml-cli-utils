@@ -51,7 +51,7 @@ else {
 			console.log(formatted);
 		})
 		.catch((err) => {
-			let str = `${chalk.red(err)}`;
+			let str = `\n\n${chalk.red(err)}\n`;
 			console.log(str);
 		});
 }
