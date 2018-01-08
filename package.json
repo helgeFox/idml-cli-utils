@@ -4,7 +4,8 @@
   "description": "Utils for managing idml locally",
   "main": "main.js",
   "bin": {
-    "assets-relocate": "assets-relocate-cli.js"
+    "assets-relocate": "assets-relocate-cli.js",
+    "template-relocate": "template-relocate-cli.js"
   },
   "dependencies": {
     "boxen": "^1.3.0",
