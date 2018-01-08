@@ -3,6 +3,7 @@
 
 const meow = require('meow');
 const chalk = require('chalk');
+const boxen = require('boxen');
 const TemplateRelocator = require('.').TemplateRelocator;
 
 const cli = meow(`
