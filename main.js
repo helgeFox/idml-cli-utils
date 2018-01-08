@@ -1,7 +1,6 @@
 'use strict';
 
-const AssetsRelocator = require('./assets-relocator');
-
 module.exports = {
-	AssetsRelocator: AssetsRelocator
+	AssetsRelocator: require('./assets-relocator'),
+	TemplateRelocator: require('./template-relocator')
 };

@@ -10,7 +10,7 @@ const rimraf = require('rimraf');
 class AssetsRelocator {
 	constructor(options) {
 		this.defaultOptions = {
-		  tempFolder: path.join(os.tmpdir(), 'idml-temp-storage')
+		  tempFolder: path.join(os.tmpdir(), 'idml-utils-storage', 'ar-temp')
 		};
 		this.setOptions(options);
 		this.run();
