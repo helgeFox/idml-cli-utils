@@ -13,7 +13,6 @@ class AssetsRelocator {
 		  tempFolder: path.join(os.tmpdir(), 'idml-utils-storage', 'ar-temp')
 		};
 		this.setOptions(options);
-		this.run();
 	}
 
 	setOptions(options) {
@@ -38,37 +37,66 @@ class AssetsRelocator {
 		return fileName.substr(0, fileName.lastIndexOf('.')) + '_fixed' + fileName.substr(fileName.lastIndexOf('.'));
 	}
 
-	run() {
-		unzip(this.source, this.tempFolder)
+	fixIdml() {
+		return unzip(this.source, this.tempFolder)
 			.then(this.unzipDone.bind(this))
 			.then(this.saveNewIdml.bind(this));
 	}
 
-	unzipDone(files) {
-		return files
-			.filter(this.filterItems.bind(this))
-			.forEach(this.handleFile.bind(this));
+	fixRules() {
+		return new Promise((resolve, reject) => {
+			let rulesFilename = this.source.replace('.idml', '.rules');
+			let data = fs.readFileSync(rulesFilename);
+			let file = this.replaceStrings(this.toRemove, this.replacement, this.parseBuffer({data: data}));
+			file = this.replaceStrings(/svfsfox01/gi, 'fot-s-web01.prodno.osl.basefarm.net', file);
+			file = this.replaceStrings(/DATA1/g, 'DATA2', file);
+			this.saveNewRules(file, rulesFilename);
+			resolve();
+		});
 	}
 
-	filterItems(item) {
+	unzipDone(files) {
+		return files
+			.filter(this.isFile.bind(this))
+			.map(this.parseBuffer.bind(this))
+			.map(this.replaceStrings.bind(this, this.toRemove, this.replacement))
+			.forEach(this.saveToTemp.bind(this));
+	}
+
+	isFile(item) {
 		return item.type === 'file';
 	}
 
-	handleFile(file) {
-		let str = file.data.toString('utf-8');
-		if (this.toRemove.test(str)) {
-			console.log('Cleaning file \"' + file.path + '\" now!'); // TODO: remove console.log, use events that consumers can listen for
-			str = str.replace(this.toRemove, this.replacement);
-			fs.writeFileSync(path.join(this.tempFolder, file.path), str);
+	parseBuffer(file) {
+		file.contents = file.data.toString('utf-8');
+		return file;
+	}
+
+	replaceStrings(toRemove, replacement, file) {
+		if (toRemove.test(file.contents)) {
+			file.contents = file.contents.replace(toRemove, replacement);
 		}
+		return file;
+	}
+
+	saveToTemp(file) {
+		fs.writeFileSync(path.join(this.tempFolder, file.path), file.contents);
 	}
 
 	saveNewIdml(files) {
-		zipdir(this.tempFolder, { saveTo: this.newFilePath }, () => {
-			rimraf(this.tempFolder, (err, result) => {
-				// Done cleaning
+		return new Promise((resolve, reject) => {
+			zipdir(this.tempFolder, { saveTo: this.newFilePath }, () => {
+				resolve();
+				rimraf(this.tempFolder, (err, result) => {
+					// Done cleaning
+				});
 			});
 		});
+	}
+
+	saveNewRules(file, fileName) {
+		let fixedRulesFilename = this.makeNewFileName(fileName);
+		fs.writeFileSync(fixedRulesFilename, file.contents);
 	}
 }
 

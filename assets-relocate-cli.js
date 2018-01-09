@@ -18,9 +18,11 @@ if (!cli.input || cli.input.length < 3) {
 	console.log(chalk.red('Missing arguments!'));
 }
 else {
-	new AssetsRelocator({
+	var ar = new AssetsRelocator({
 		source: cli.input[0],
 		strToRemove: cli.input[1],
 		strReplacement: cli.input[2]
 	});
+	ar.fixIdml();
+	ar.fixRules();
 }

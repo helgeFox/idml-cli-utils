@@ -18,7 +18,8 @@ class TemplateRelocator {
 	}
 
 	_buildProdPath(templatePath) {
-		templatePath = templatePath.lastIndexOf('/') === templatePath.length - 1 ? templatePath : templatePath.substr(0, templatePath.lastIndexOf('/'));
+		this.idmlName = templatePath.substr(templatePath.lastIndexOf('/') + 1);
+		templatePath = templatePath.substr(0, templatePath.lastIndexOf('/'));
 		let prodPath = path.join('//svfsfox01', 'DATA1', 'IDS', 'TEMPLATES');
 		return path.join(prodPath, templatePath);
 	}
@@ -69,6 +70,10 @@ class TemplateRelocator {
 			nodir: true
 		};
 		return cpy(['**/*'], to, options);
+	}
+
+	getStageIdmlUri() {
+		return path.join(this.stageTemplatePath, this.idmlName + '.idml');
 	}
 }
 

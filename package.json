@@ -5,7 +5,8 @@
   "main": "main.js",
   "bin": {
     "assets-relocate": "assets-relocate-cli.js",
-    "template-relocate": "template-relocate-cli.js"
+    "template-relocate": "template-relocate-cli.js",
+    "prod-to-stage": "prod-to-stage-cli.js"
   },
   "dependencies": {
     "boxen": "^1.3.0",
