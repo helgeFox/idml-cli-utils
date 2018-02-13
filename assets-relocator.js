@@ -46,10 +46,12 @@ class AssetsRelocator {
 	fixRules() {
 		return new Promise((resolve, reject) => {
 			let rulesFilename = this.source.replace('.idml', '.rules');
+			console.log('fixing rules file "' + rulesFilename + '"');
 			let data = fs.readFileSync(rulesFilename);
 			let file = this.replaceStrings(this.toRemove, this.replacement, this.parseBuffer({data: data}));
 			file = this.replaceStrings(/svfsfox01/gi, 'fot-s-web01.prodno.osl.basefarm.net', file);
 			file = this.replaceStrings(/DATA1/g, 'DATA2', file);
+			file = this.replaceStrings(/html5.foxpublish.net/gi, 'html5.stage.foxpublish.net', file);
 			this.saveNewRules(file, rulesFilename);
 			resolve();
 		});
@@ -60,6 +62,8 @@ class AssetsRelocator {
 			.filter(this.isFile.bind(this))
 			.map(this.parseBuffer.bind(this))
 			.map(this.replaceStrings.bind(this, this.toRemove, this.replacement))
+			.map(this.replaceStrings.bind(this, /html5.foxpublish.net/gi, 'html5.stage.foxpublish.net'))
+			.map(this.replaceStrings.bind(this, /DATA1/g, 'DATA2'))
 			.forEach(this.saveToTemp.bind(this));
 	}
 
