@@ -57,6 +57,8 @@ class TemplateRelocator {
 
 	copyToStage() {
 		return this._copy(this.tempDir, this.stageTemplatePath).then(() => {
+			// TODO: add an "assets" folder if it was not copied. 
+			// This is really not critical but to remove *all* network errors due to moving the template, this should be done.
 			rimraf(this.tempDir, (err, result) => {
 				// Done cleaning
 			});
