@@ -24,8 +24,10 @@ function stripRuleTypes(options, rules) {
 	let fixed = _.reduce(rules, (result, rule) => {
 		if (rule.Name !== options.ruleType)
 			result.push(rule);
-		else if (options.targetId && rule.Values.targetId !== options.targetId)
-			result.push(rule);
+		else if (options.targetId) {
+			if (rule.Values.targetId !== options.targetId)
+				result.push(rule);
+		}
 		return result;
 	}, []);
 	return fixed;
@@ -71,10 +73,13 @@ module.exports = {
 			.catch(onError);
 	},
 
-	purgeRuleType: function (filePath, ruleType) {
+	purgeRuleType: function (filePath, ruleType, targetId) {
+		let stripOptions = {ruleType: ruleType};
+		if (targetId)
+			stripOptions.targetId = targetId;
 		return getContents(filePath)
 			.then(parseRawRules.bind(null, null))
-			.then(stripRuleTypes.bind(null, {ruleType: ruleType}))
+			.then(stripRuleTypes.bind(null, stripOptions))
 			.then(saveNewRulesFile.bind(null, filePath))
 			.catch(onError);
 	},
