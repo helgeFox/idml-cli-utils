@@ -46,7 +46,6 @@ class AssetsRelocator {
 	fixRules() {
 		return new Promise((resolve, reject) => {
 			let rulesFilename = this.source.replace('.idml', '.rules');
-			console.log('fixing rules file "' + rulesFilename + '"');
 			let data = fs.readFileSync(rulesFilename);
 			let file = this.replaceStrings(this.toRemove, this.replacement, this.parseBuffer({data: data}));
 			file = this.replaceStrings(/svfsfox01/gi, 'fot-s-web01.prodno.osl.basefarm.net', file);
