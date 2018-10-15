@@ -37,6 +37,7 @@ class TemplateRelocator {
 		return this._check(this.stageTemplatePath);
 	}
 
+	// TODO: extract STAGE/PROD environment checks to its own module to be shared with findIdmlInstance and maybe others...
 	_check(uri) {
 		return new Promise((resolve, reject) => {
 			fs.access(uri, (err, result) => {

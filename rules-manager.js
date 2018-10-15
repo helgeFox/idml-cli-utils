@@ -44,7 +44,7 @@ function saveNewRulesFile(filePath, fixedRules) {
 function createNewBackupFilename(filePath) {
 	let obj = getTimeObject();
 	let id = `${obj.y}${obj.m}${obj.d}${obj.h}${obj.min}${obj.sec}`;
-	return filePath.replace('.rules', `-BCK-${id}.rules`);
+	return filePath.replace('.rules', `-BCK-${id}.rules`); // TODO: don't hardcode file endings, we might extend to other file types later
 }
 
 function getTimeObject() {

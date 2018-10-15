@@ -7,31 +7,47 @@
     "assets-relocate": "assets-relocate-cli.js",
     "template-relocate": "template-relocate-cli.js",
     "prod-to-stage": "prod-to-stage-cli.js",
-    "rules-fix": "rules-cli.js"
+    "rules-fix": "rules-cli.js",
+    "instance": "instance-cli.js"
   },
   "dependencies": {
+    "@foxpublish/find-idml-instance": "^1.1.0",
     "boxen": "^1.3.0",
     "chalk": "^1.1.3",
     "cpy": "^6.0.0",
     "decompress": "^4.2.0",
     "graceful-fs": "^4.1.11",
-    "lodash": "^4.17.4",
     "leftpad": "0.0.1",
+    "lodash": "^4.17.4",
     "meow": "^4.0.0",
     "ora": "^1.4.0",
     "rimraf": "^2.6.2",
     "shortid": "^2.2.8",
     "zip-dir": "^1.0.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^6.0.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "https://github.com/helgeFox/idml-utils.git",
-  "author": {
-    "name": "Helge Hofstad",
-    "email": "helge.hofstad@vitecsoftware.com",
-    "url": "https://github.com/helgeFox"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/helgeFox/idml-utils.git"
   },
-  "license": "ISC"
+  "author": "Helge Hofstad <helge.hofstad@vitecsoftware.com> (https://github.com/helgeFox)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/helgeFox/idml-utils/issues"
+  },
+  "homepage": "https://github.com/helgeFox/idml-utils#readme",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": []
 }

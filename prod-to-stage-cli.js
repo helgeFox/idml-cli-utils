@@ -106,7 +106,7 @@ function runAssetsReplacer(prod, stage, idmlStageUri) {
 
 function renameIdmlAndRules(idmlStageUri) {
 	console.log('');
-	let spinner = ora({text: 'Renaming files as a safety precaution...', color: 'yellow'}); // TODO this is not showing up, don't know exactly why... 
+	let spinner = ora({text: 'Renaming files as a safety precaution...', color: 'yellow'}); // TODO this is not showing up, don't know exactly why...  (Edit: maybe inside the Promise is better?)
 	return new Promise((resolve, reject) => {
 		let idml = idmlStageUri;
 		let rules = idmlStageUri.replace('.idml', '.rules');

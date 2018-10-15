@@ -5,11 +5,11 @@ module.exports = {
         "es6": true
         // "amd": true
     },
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
     "extends": "eslint:recommended",
-    "global": [
-        "define",
-        "jQuery"
-    ],
+    "globals": {},
     "rules": {
         "brace-style": ["warn", "stroustrup", { "allowSingleLine": true }],
         "comma-spacing": ["warn", { "before": false, "after": true }],
@@ -26,7 +26,7 @@ module.exports = {
         "indent": ["warn", 'tab'],
 
         // disable unwanted rules:
-        "no-unused-vars": "off",
+        "no-unused-vars": ["warn"],
         "no-console": "off"
     }
 };

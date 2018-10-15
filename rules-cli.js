@@ -17,7 +17,7 @@ const cli = meow(`
     --target-id, -t  Only rules with targetId
 
   Examples
-    $ fix-rules "V:\\IDS\\TEMPLATES\\692\\Test\\Salgsoppgave\\MHE_Prospekt_K1.rules" "pdfAttachments" --target "u13d"
+    $ rules-fix "V:\\IDS\\TEMPLATES\\692\\Test\\Salgsoppgave\\MHE_Prospekt_K1.rules" "pdfAttachments" --target-id "u13d"
     Success!
 `,
 {

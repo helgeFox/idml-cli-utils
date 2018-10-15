@@ -10,7 +10,7 @@ const rimraf = require('rimraf');
 class AssetsRelocator {
 	constructor(options) {
 		this.defaultOptions = {
-		  tempFolder: path.join(os.tmpdir(), 'idml-utils-storage', 'ar-temp')
+			tempFolder: path.join(os.tmpdir(), 'idml-utils-storage', 'ar-temp')
 		};
 		this.setOptions(options);
 	}
@@ -25,7 +25,7 @@ class AssetsRelocator {
 		if (!options.strReplacement || options.strReplacement.length < 1) {
 			throw new Error('No <strReplacement> supplied');
 		}
-		options = Object.assign({}, options, this.defaultOptions);
+		options = Object.assign({}, this.defaultOptions, options);
 		this.tempFolder = options.tempFolder;
 		this.source = options.source;
 		this.toRemove = new RegExp(options.strToRemove, 'gi');
