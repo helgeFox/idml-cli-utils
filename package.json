@@ -11,7 +11,7 @@
     "instance": "instance-cli.js"
   },
   "dependencies": {
-    "@foxpublish/find-idml-instance": "^1.1.0",
+    "@foxpublish/find-idml-instance": "^1.1.2",
     "boxen": "^1.3.0",
     "chalk": "^1.1.3",
     "cpy": "^6.0.0",
