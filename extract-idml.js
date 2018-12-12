@@ -13,10 +13,13 @@ const instancesPath = 'IDS\\INSTANCES\\';
 let envPath = environments['stage'];
 let basePath = envPath + templatesPath;
 
-function doExtract(commonPath, idmlName, resultDirname) {
+function combinePaths(commonPath, idmlName, resultDirname) {
 	const toExtract = path.join(basePath, commonPath, appendExt(idmlName, 'idml'));
 	const targetPath = path.join(basePath, commonPath, resultDirname ? resultDirname : idmlName);
-	return decompress(toExtract, targetPath);
+	return {
+		source: toExtract,
+		target: targetPath
+	};
 }
 
 function appendExt(p, ext) {
@@ -25,10 +28,16 @@ function appendExt(p, ext) {
 
 module.exports = {
 	extract: function (options) {
-		if (options.prod) envPath = environments['prod'];
-		if (options.instance) basePath = envPath + instancesPath;
-		if (options.basePath) basePath = options.basePath;
-		if (!options.idmlName) throw 'Missing required argument \'idmlName\'';
-		return doExtract(options.commonPath ? options.commonPath : '', options.idmlName, options.resultDirname);
+		return new Promise((resolve, reject) => {
+			if (options.prod) envPath = environments['prod'];
+			if (options.instance) basePath = envPath + instancesPath;
+			if (options.basePath) basePath = options.basePath;
+			if (!options.idmlName) throw 'Missing required argument \'idmlName\'';
+			const paths = combinePaths(options.commonPath ? options.commonPath : '', options.idmlName, options.resultDirname);
+			decompress(paths.source, paths.target)
+				.then(() => {
+					resolve(paths.target);
+				}).catch(reject);
+		});
 	}
 }

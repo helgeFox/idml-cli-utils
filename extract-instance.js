@@ -1,6 +1,7 @@
 'use strict';
 
 const meow = require('meow');
+const chalk = require('chalk');
 
 const cli = meow(`
 	Usage
@@ -31,6 +32,14 @@ extractor.extract({
 	resultDirname: 'extracted',
 	prod: prod,
 	instance: true
-}).then(() => {
-	console.log('done!');
+}).then((result) => {
+	const expl = require('child_process').exec(`explorer.exe /select,${result}`);
+	expl.stderr.on('data', (data) => {
+		console.log(chalk.red('Something went wrong opening the folder'), data.toString());
+		process.exit(1);
+	});
+	expl.on('exit', code => {
+		console.log(chalk.green('Success!'));
+		process.exit();
+	});
 });
