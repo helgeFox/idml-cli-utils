@@ -36,6 +36,8 @@ const numPagesInTemplate = 1;
 const numPdfsToProduce = 2;
 // Include "Complete" events in Windows Event Viewer?
 const includeCompleteEvents = false;
+// To output more info set this to true
+const verbose = true;
 
 /* ****** /END USER INPUT ****** */
 
@@ -144,14 +146,16 @@ async function waitForFile(filePath) {
 }
 
 function reportSingleFile(result) {
-	console.log(`File ${result.file} is done at ${result.finished.toTimeString()}. File size is ${result.stat.size}. Waiting for the rest.`);
+	if (verbose)
+		console.log(`\nFile ${result.file} is done at ${result.finished.toTimeString()}. File size is ${result.stat.size}. Waiting for the rest.`);
 	return result;
 }
 
 var idmlText = fs.readFileSync(xmlDataFile, 'utf8');
 
 const started = new Date();
-console.log(chalk.green('Production started at ' + started.toTimeString()));
+if (verbose)
+	console.log(chalk.green('Production started at ' + started.toTimeString()) + '\n');
 let spinner = ora({text: 'Getting GUID\'s...', color: 'green'}).start();
 // let jobs = [getUid(), getUid()];
 let jobs = [];
@@ -160,29 +164,39 @@ for (var i = 0; i < numPdfsToProduce; i++) {
 }
 Promise.all(jobs)
 	.then(guids => {
-		console.log(chalk.green(' Guids recieved: \n'), guids, '\n');
-		spinner.text = 'Creating instances...';
+		spinner.succeed('Guids recieved');
+		if (verbose)
+			console.log('\n', guids, '\n');
+		spinner.start('Createing instances...');
 		return Promise.all(guids.map(guid => createInstance(guid)))
 	})
 	.then(instances => {
-		console.log(chalk.green(' Instances created'), '\n');
-		spinner.text = 'Creating PDF\'s...';
+		spinner.succeed('Instances created');
+		if (verbose)
+			console.log('\n');
+		spinner.start('Creating PDF\'s...');
 		instances.forEach(row => publishPdf(row.Data.InstanceId, 'low'));
 		return Promise.all(instances.map(row => publishPdf(row.Data.InstanceId, 'hi')))
 	})
 	.then(pdfs => {
-		console.log(chalk.green(' PDF\'s published!'), '\n');
-		spinner.text = 'Getting PDF paths...';
+		spinner.succeed('PDF\'s published!');
+		if (verbose)
+			console.log('\n');
+		spinner.start('Getting PDF paths...');
 		return Promise.all(pdfs.map(item => fii.getPdfFromGuid(item.guid, {quality: 'hi'})))
 	})
 	.then(filePaths => {
-		console.log(chalk.green(' File path\'s retrieved\n'), filePaths, '\n');
-		spinner.text = 'Checking file sizes...';
+		spinner.succeed('File path\'s retrieved');
+		if (verbose)
+			console.log('\n', filePaths, '\n');
+		spinner.start('Checking file sizes...');
 		spinner.color = 'yellow';
 		return Promise.all(filePaths.map(file => waitForFile(file).then(reportSingleFile))); // TODO: maybe tweak this? It might be a bit heavy when ran with several hundred operations or more...
 	})
 	.then(fileStats => {
-		console.log(chalk.green(' The sizes: \n'), fileStats.map(res => res.stat.size).join(', '));
+		console.log('\n');
+		spinner.succeed('All done!');
+		console.log(chalk.green('\n\nThe sizes: \n'), fileStats.map(res => res.stat.size).join(', '));
 		// console.log(process._getActiveHandles(), process._getActiveRequests());
 
 		// TODO: add a report for finished jobs.
@@ -190,5 +204,10 @@ Promise.all(jobs)
 		// - how many different file sizes did we encounter?
 		// - How long time did the whole operation take?
 
+		process.exit();
+	}).
+	catch(function (err) {
+		spinner.fail('Something went wrong!')
+		console.log('\n', err.message ? err.message : err);
 		process.exit();
 	});
